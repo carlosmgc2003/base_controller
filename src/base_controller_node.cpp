@@ -43,9 +43,9 @@ void BaseController::collisionMsgCallback(const std_msgs::Int32::ConstPtr& msg){
 
 void BaseController::endOfRaceMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     if(msg->data == -1) {
-        this->right_eor = true;
-    } else if (msg->data == 1) {
         this->left_eor = true;
+    } else if (msg->data == 1) {
+        this->right_eor = true;
     }
 }
 
@@ -63,11 +63,11 @@ void BaseController::motorDriver(){
         vescMotor.publish(this->msgMotor);
     }
     if(this->right_eor && this->msgAckermann.data == RIGHT_END) {
-        ROS_INFO("No giro mas! Toque el fin de carrera derecho!");
+        ROS_INFO("No giro mas! Limite de Giro a la Derecha!");
         this->msgAckermann.data = 0;
     } else if(this->left_eor && this->msgAckermann.data == LEFT_END) {
         this->msgAckermann.data = 0;
-        ROS_INFO("No giro mas! Toque el fin de carrera izquierdo!");
+        ROS_INFO("No giro mas! Limite de Giro a la Izquierda!");
     }
     ackermannDir.publish(this->msgAckermann);
     this->right_eor = false;
