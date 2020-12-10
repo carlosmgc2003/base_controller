@@ -9,6 +9,7 @@ BaseController::BaseController() {
     
     twist = n.subscribe<geometry_msgs::Twist>("cmd_vel", 10, &BaseController::twistMsgCallback, this);
     collision = n.subscribe<std_msgs::Int32>("obstacle", 10, &BaseController::collisionMsgCallback, this);
+    end_of_race = n.subscribe<std_msgs::Int32>("end_of_race", 10, &BaseController::endOfRaceCallback, this);
     vescMotor =  n.advertise<std_msgs::Float64>("commands/motor/duty_cycle", 10);
     ackermannDir = n.advertise<std_msgs::Int32>("direction",10);
     this->msgMotor.data = 0.0;
@@ -36,6 +37,10 @@ void BaseController::collisionMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     } else {
         this->obstacle = false;
     }
+}
+
+void BaseController::collisionMsgCallback(const std_msgs::Int32::ConstPtr& msg){
+
 }
 void BaseController::motorDriver(){
     ros::spinOnce();
