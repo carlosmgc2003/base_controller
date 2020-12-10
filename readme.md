@@ -46,5 +46,5 @@ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 ### Para frenarlo simulando el mensaje de un sensor (ej: LIDAR)
 
 ```bash
-rostopic pub /obstacle std_msgs/Int32 "data: 1" 
+rostopic pub /obstacle std_msgs/Int32 "data: 1"
 ```
