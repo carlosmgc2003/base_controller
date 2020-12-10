@@ -9,21 +9,23 @@ BaseController::BaseController() {
     
     twist = n.subscribe<geometry_msgs::Twist>("cmd_vel", 10, &BaseController::twistMsgCallback, this);
     collision = n.subscribe<std_msgs::Int32>("obstacle", 10, &BaseController::collisionMsgCallback, this);
-    end_of_race = n.subscribe<std_msgs::Int32>("end_of_race", 10, &BaseController::endOfRaceCallback, this);
+    endOfRace = n.subscribe<std_msgs::Int32>("end_of_race", 10, &BaseController::endOfRaceMsgCallback, this);
     vescMotor =  n.advertise<std_msgs::Float64>("commands/motor/duty_cycle", 10);
     ackermannDir = n.advertise<std_msgs::Int32>("direction",10);
     this->msgMotor.data = 0.0;
     this->msgAckermann.data = 0;
     this->obstacle = false;
+    this->right_eor = false;
+    this->left_eor = false;
 }
 
 void BaseController::twistMsgCallback(const geometry_msgs::Twist::ConstPtr& msg){
     this->msgMotor.data = msg->linear.x;
     double direction = msg->angular.z;
     if(direction > 0.0) {
-        this->msgAckermann.data = 1;
+        this->msgAckermann.data = LEFT_END;
     } else if(direction < 0.0){
-        this->msgAckermann.data = -1;
+        this->msgAckermann.data = RIGHT_END;
     } else {
         this->msgAckermann.data = 0;
     }
@@ -39,20 +41,35 @@ void BaseController::collisionMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     }
 }
 
-void BaseController::collisionMsgCallback(const std_msgs::Int32::ConstPtr& msg){
-
+void BaseController::endOfRaceMsgCallback(const std_msgs::Int32::ConstPtr& msg){
+    if(msg->data == -1) {
+        this->right_eor = true;
+    } else if (msg->data == 1) {
+        this->left_eor = true;
+    }
 }
+
+
 void BaseController::motorDriver(){
     ros::spinOnce();
     if(!this->obstacle) {
         vescMotor.publish(this->msgMotor);
-        ackermannDir.publish(this->msgAckermann);
+        ROS_INFO("No avanzo mas! Obstaculo al frente!");
     } else {
         if(this->msgMotor.data > 0.0)
             this->msgMotor.data = 0.0;
         vescMotor.publish(this->msgMotor);
-        ackermannDir.publish(this->msgAckermann);
     }
+    if(this->right_eor && this->msgAckermann.data == RIGHT_END) {
+        ROS_INFO("No giro mas! Toque el fin de carrera derecho!");
+        this->msgAckermann.data = 0;
+    } else if(this->left_eor && this->msgAckermann.data == LEFT_END) {
+        this->msgAckermann.data = 0;
+        ROS_INFO("No giro mas! Toque el fin de carrera izquierdo!");
+    }
+    ackermannDir.publish(this->msgAckermann);
+    this->right_eor = false;
+    this->left_eor = false;
 }
 
 int main(int argc, char **argv) {
