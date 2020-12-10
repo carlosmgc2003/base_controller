@@ -54,10 +54,12 @@ void BaseController::motorDriver(){
     ros::spinOnce();
     if(!this->obstacle) {
         vescMotor.publish(this->msgMotor);
-        ROS_INFO("No avanzo mas! Obstaculo al frente!");
+        
     } else {
-        if(this->msgMotor.data > 0.0)
+        if(this->msgMotor.data > 0.0){
+            ROS_INFO("No avanzo mas! Obstaculo al frente!");
             this->msgMotor.data = 0.0;
+        }
         vescMotor.publish(this->msgMotor);
     }
     if(this->right_eor && this->msgAckermann.data == RIGHT_END) {
