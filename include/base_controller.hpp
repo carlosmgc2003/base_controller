@@ -29,6 +29,7 @@ public:
     BaseController();
     void twistMsgCallback(const geometry_msgs::Twist::ConstPtr&);
     void collisionMsgCallback(const std_msgs::Int32::ConstPtr&);
-    void endOfRaceMsgCallback(const std_msgs::Int32::ConstPtr&);
+    void leftEorMsgCallback(const std_msgs::Int32::ConstPtr&);
+    void rightEorMsgCallback(const std_msgs::Int32::ConstPtr&);
     void motorDriver();
 };
