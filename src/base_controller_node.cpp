@@ -9,8 +9,10 @@ BaseController::BaseController() {
     // Inicializacion de las subscripciones
     twist = n.subscribe<geometry_msgs::Twist>("cmd_vel", 10, &BaseController::twistMsgCallback, this);
     collision = n.subscribe<std_msgs::Int32>("obstacle", 10, &BaseController::collisionMsgCallback, this);
-    endOfRace = n.subscribe<std_msgs::Int32>("end_of_race", 10, &BaseController::endOfRaceMsgCallback, this);
-    
+    leftEor = n.subscribe<std_msgs::Int32>("left_eor", 10, &BaseController::leftEorMsgCallback, this);
+    rightEor = n.subscribe<std_msgs::Int32>("right_eor", 10, &BaseController::rightEorMsgCallback, this);
+
+
     // Inicializacion de las publicaciones
     vescMotor =  n.advertise<std_msgs::Float64>("commands/motor/duty_cycle", 10);
     ackermannDir = n.advertise<std_msgs::Int32>("direction",10);
@@ -49,11 +51,16 @@ void BaseController::collisionMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     }
 }
 
-void BaseController::endOfRaceMsgCallback(const std_msgs::Int32::ConstPtr& msg){
+void BaseController::leftEorMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     // Si llega el mensaje de final de carrera se levanta el flag correspondiente
-    if(msg->data == -1) {
+    if(msg->data == 1) {
         this->left_eor = true;
-    } else if (msg->data == 1) {
+    }
+}
+
+void BaseController::rightEorMsgCallback(const std_msgs::Int32::ConstPtr& msg){
+    // Si llega el mensaje de final de carrera se levanta el flag correspondiente
+    if(msg->data == 1) {
         this->right_eor = true;
     }
 }

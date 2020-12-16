@@ -12,7 +12,8 @@ class BaseController {
     // Subscriptores
     ros::Subscriber twist;
     ros::Subscriber collision;
-    ros::Subscriber endOfRace;
+    ros::Subscriber leftEor;
+    ros::Subscriber rightEor;
     // Publicadores
     ros::Publisher vescMotor;
     ros::Publisher ackermannDir;
