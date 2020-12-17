@@ -31,9 +31,9 @@ void BaseController::twistMsgCallback(const geometry_msgs::Twist::ConstPtr& msg)
     // Tomo la varicion en azimut del vector velocidad 
     double direction = msg->angular.z;
     // Discretizo el azimut [-1, 0, 1]
-    if(direction > 0.0 && this->left_eor) {
+    if(direction > 0.0) {
         this->msgAckermann.data = LEFT;
-    } else if(direction < 0.0 && this->right_eor){
+    } else if(direction < 0.0){
         this->msgAckermann.data = RIGHT;
     } else {
         this->msgAckermann.data = 0;
