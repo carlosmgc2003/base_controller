@@ -89,7 +89,10 @@ void BaseController::motorDriver(){
     }
 
     // Si llegue al EOR y quiero seguir doblando a la derecha
-    if(this->msgAckermann.data == RIGHT && !this->right_eor) {
+    if(this->msgAckermann.data == 0){
+        ackermannDir.publish(this->msgAckermann);
+    }
+    else if(this->msgAckermann.data == RIGHT && !this->right_eor) {
         ackermannDir.publish(this->msgAckermann);
         // Si llegue al EOR y quiero seguir doblando a la izquierda
     } else if(this->msgAckermann.data == LEFT && !this->left_eor) {
