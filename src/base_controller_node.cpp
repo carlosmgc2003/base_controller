@@ -31,10 +31,10 @@ void BaseController::twistMsgCallback(const geometry_msgs::Twist::ConstPtr& msg)
     // Tomo la varicion en azimut del vector velocidad 
     double direction = msg->angular.z;
     // Discretizo el azimut [-1, 0, 1]
-    if(direction > 0.0) {
-        this->msgAckermann.data = LEFT_END;
-    } else if(direction < 0.0){
-        this->msgAckermann.data = RIGHT_END;
+    if(direction > 0.0 && this->left_eor) {
+        this->msgAckermann.data = LEFT;
+    } else if(direction < 0.0 && this->right_eor){
+        this->msgAckermann.data = RIGHT;
     } else {
         this->msgAckermann.data = 0;
     }
@@ -55,6 +55,8 @@ void BaseController::leftEorMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     // Si llega el mensaje de final de carrera se levanta el flag correspondiente
     if(msg->data == 1) {
         this->left_eor = true;
+    } else {
+        this->left_eor = false;
     }
 }
 
@@ -62,6 +64,9 @@ void BaseController::rightEorMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     // Si llega el mensaje de final de carrera se levanta el flag correspondiente
     if(msg->data == 1) {
         this->right_eor = true;
+    } else {
+        this->left_eor = false;
+
     }
 }
 

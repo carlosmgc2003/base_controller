@@ -3,8 +3,8 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/Float64.h>
 
-const int RIGHT_END = 1;
-const int LEFT_END = -1;
+const int LEFT = 1;
+const int RIGHT = -1;
 
 class BaseController {
     ros::NodeHandle n;
