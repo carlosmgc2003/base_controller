@@ -89,12 +89,12 @@ void BaseController::motorDriver(){
     }
 
     // Si llegue al EOR y quiero seguir doblando a la derecha
-    if(this->right_eor && this->msgAckermann.data == RIGHT_END) {
+    if(this->right_eor && this->msgAckermann.data == LEFT) {
         ROS_INFO("No giro mas! Limite de Giro a la Derecha!");
         // No giro mas
         this->msgAckermann.data = 0;
         // Si llegue al EOR y quiero seguir doblando a la izquierda
-    } else if(this->left_eor && this->msgAckermann.data == LEFT_END) {
+    } else if(this->left_eor && this->msgAckermann.data == RIGHT) {
         // No giro mas
         this->msgAckermann.data = 0;
         ROS_INFO("No giro mas! Limite de Giro a la Izquierda!");
