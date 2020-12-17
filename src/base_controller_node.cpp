@@ -101,10 +101,6 @@ void BaseController::motorDriver(){
     }
     // Si no hay levantado ningun EOR, mando nomas el mensaje de girar.
     ackermannDir.publish(this->msgAckermann);
-
-    // Reset de las flags de EOR.
-    this->right_eor = false;
-    this->left_eor = false;
 }
 
 int main(int argc, char **argv) {
