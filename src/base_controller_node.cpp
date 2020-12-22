@@ -65,7 +65,7 @@ void BaseController::rightEorMsgCallback(const std_msgs::Int32::ConstPtr& msg){
     if(msg->data == 1) {
         this->right_eor = true;
     } else {
-        this->left_eor = false;
+        this->right_eor = false;
 
     }
 }
@@ -89,20 +89,13 @@ void BaseController::motorDriver(){
     }
 
     // Si llegue al EOR y quiero seguir doblando a la derecha
-    if(this->msgAckermann.data == 0){
-        ackermannDir.publish(this->msgAckermann);
-    }
-    else if(this->msgAckermann.data == RIGHT && !this->right_eor) {
-        ackermannDir.publish(this->msgAckermann);
-        // Si llegue al EOR y quiero seguir doblando a la izquierda
-    } else if(this->msgAckermann.data == LEFT && !this->left_eor) {
-        ackermannDir.publish(this->msgAckermann);
+    if(this->msgAckermann.data == RIGHT && this->right_eor) {
+        ROS_INFO("No puedo girar mas a la derecha!");
+    } else if(this->msgAckermann.data == LEFT && this->left_eor) {
+        ROS_INFO("No puedo girar mas a la izquierda!");
     } else {
-        ROS_INFO("No giro mas! Limite de Giro!");
+        ackermannDir.publish(this->msgAckermann);
     }
-
-    // Si no hay levantado ningun EOR, mando nomas el mensaje de girar.
-    
 }
 
 int main(int argc, char **argv) {
